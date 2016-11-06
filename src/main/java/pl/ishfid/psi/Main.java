@@ -99,6 +99,65 @@ public class Main {
               " OOO "  }};
 
 
+    public static String[][] digitstest = {
+            { " OOO ",
+              "O   O",
+              "O   O",
+              "O   O",
+              "O   O",
+              "O   O",
+              "0OOO "  },
+
+            { "  O  ",
+              " OO  ",
+              "  O  ",
+              "  O  ",
+              "  O  ",
+              "  O  ",
+              "  O  "  },
+
+            { " OOO ",
+              "    O",
+              "    O",
+              "   O ",
+              "  O  ",
+              " O   ",
+              "OOOO0"  },
+
+            { " OOO ",
+              "0   O",
+              "    O",
+              "  OO ",
+              "    O",
+              "0   O",
+              " OOO "  },
+
+            { "  OOO",
+              "    O",
+              "    O",
+              "   O ",
+              "  O  ",
+              " O   ",
+              "O    "  },
+
+            { "0OOO0",
+              "O   O",
+              "O   O",
+              " OOO ",
+              "O   O",
+              "O   O",
+              " OOO "  },
+
+            { " OOO ",
+              "O   O",
+              "O   O",
+              " OOOO",
+              "    O",
+              "    O",
+              "  OO "  }
+    };
+
+
     public static MLData image2data(String[] image)
     {
         MLData result = new BasicMLData(char_width * char_height);
@@ -161,11 +220,12 @@ public class Main {
         MLDataSet training = generateTraining();
         MLTrain train = new TrainAdaline(network,training,0.01);
 
-        int epoch = 1;
+        int epoch = 0;
         do {
             train.iteration();
-            System.out
-                    .println("Epoch #" + epoch + " Error:" + train.getError());
+            System.out.println(train.getError());
+//            System.out
+//                    .println("Epoch #" + epoch + " Error:" + train.getError());
             epoch++;
         } while(train.getError() > 0.01);
 
@@ -173,16 +233,16 @@ public class Main {
         System.out.println("Error:" + network.calculateError(training));
 
         // test it
-        for(int i = 0; i < digits.length; i++)
+        for(int i = 0; i < digitstest.length; i++)
         {
-            int output = network.winner(image2data(digits[i]));
+            int output = network.winner(image2data(digitstest[i]));
 
             for(int j = 0; j < char_height; j++)
             {
                 if( j == char_height - 1 )
-                    System.out.println(digits[i][j] + " -> " + output);
+                    System.out.println(digitstest[i][j] + " -> " + output);
                 else
-                    System.out.println(digits[i][j]);
+                    System.out.println(digitstest[i][j]);
 
             }
 

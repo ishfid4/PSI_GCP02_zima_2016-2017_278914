@@ -223,9 +223,8 @@ public class Main {
         int epoch = 0;
         do {
             train.iteration();
-            System.out.println(train.getError());
-//            System.out
-//                    .println("Epoch #" + epoch + " Error:" + train.getError());
+     //       System.out.println(train.getError());
+            System.out.println("Epoch #" + epoch + " Error:" + train.getError());
             epoch++;
         } while(train.getError() > 0.01);
 

@@ -2,6 +2,7 @@ package pl.ishfid.psi;
 
 import pl.ishfid.psi.digitRecognition.AdalineNetwork;
 import pl.ishfid.psi.digitRecognition.Data;
+import pl.ishfid.psi.digitRecognition.Hebb;
 import pl.ishfid.psi.exampleNeuronsAndNetworks.LogicalFunctions;
 
 /**
@@ -12,10 +13,14 @@ public class Main {
 
 
     public static void main(String[] args) {
-        //------------Digits recognition using Adaline------------
         Data data = new Data();
-        AdalineNetwork adalineNetwork = new AdalineNetwork(data);
-        adalineNetwork.execute();
+        Hebb hebbNetwork = new Hebb(35, 0.7);
+        hebbNetwork.run(data.getDigits());
+
+        //------------Digits recognition using Adaline------------
+//        Data data = new Data();
+//        AdalineNetwork adalineNetwork = new AdalineNetwork(data);
+//        adalineNetwork.execute();
 
         //-----------------Old implemetations---------------------
 //        LogicalFunctions logicalFunctions = new LogicalFunctions();

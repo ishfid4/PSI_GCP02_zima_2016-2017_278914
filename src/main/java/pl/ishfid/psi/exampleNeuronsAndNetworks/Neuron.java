@@ -1,4 +1,4 @@
-package pl.ishfid.psi;
+package pl.ishfid.psi.exampleNeuronsAndNetworks;
 
 import javafx.util.Pair;
 

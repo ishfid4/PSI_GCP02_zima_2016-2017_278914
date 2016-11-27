@@ -1,4 +1,4 @@
-package pl.ishfid.psi;
+package pl.ishfid.psi.exampleNeuronsAndNetworks;
 
 import org.encog.ml.data.MLData;
 import org.encog.ml.data.MLDataPair;

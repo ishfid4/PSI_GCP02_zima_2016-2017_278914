@@ -14,12 +14,11 @@ public class Main {
     public static void main(String[] args) throws IOException {
         int epochCount = 100;
 
-//      Netowrk(inputsCount, hiddenLayerCount, hiddenLayerInputs, outputCount, learningRate)
-        Network network = new Network(256, 1, 256, 10, 0.05);
+//      Netowrk(inputsCount, hiddenLayerCount, hiddenLayerInputs, outputCount, learningRate, neuronFactory)
+        Network network = new Network(256, 1, 256, 10, 0.05, new McCullohPittsFactory());
         int outputCount = network.dataManager.outputCount;
         double records = network.dataManager.learningRecordCount;
-        //Using McCullohPitts neuron model
-        ArrayList<McCullohPitts> outputNeurons = network.getOutputLayer().getNeurons();
+        ArrayList<Neuron> outputNeurons = network.getOutputLayer().getNeurons();
 
         for (int epoch = 1;  epoch <= epochCount; ++epoch){
             double MSE = 0;
@@ -43,7 +42,7 @@ public class Main {
         }
 
         int validationRecords = network.dataManager.validationRecordCount;
-        System.out.println("Validation Records!");
+        System.out.println("Validation");
 
         double correctAnswers = 0;
         double falseAnswers = 0;
@@ -55,7 +54,7 @@ public class Main {
             ArrayList<Double> targetOutputs = network.dataManager.validationOutputDataSet.get(i);
 
             network.setInputValues(i, false);
-            network.setTargetValues(i, false); // validation, not learning
+            network.setTargetValues(i, false); // validation
 
             network.feedForward();
 
@@ -98,7 +97,7 @@ public class Main {
 //        logicalFunctions.xorProblemAdalinePattern();
     }
 
-    static int networkAnswer(ArrayList<McCullohPitts> outputNeurons){
+    static int networkAnswer(ArrayList<Neuron> outputNeurons){
         int answer = 0;
         for (int i = 0; i < 10; ++i){
             if (outputNeurons.get(answer).getOutputVal() <= outputNeurons.get(i).getOutputVal()){

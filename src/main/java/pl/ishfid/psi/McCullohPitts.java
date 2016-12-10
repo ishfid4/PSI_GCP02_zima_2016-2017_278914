@@ -6,6 +6,8 @@ import static java.lang.StrictMath.exp;
  * Created by ishfi on 02.12.2016.
  */
 public class McCullohPitts extends Neuron{
+    private double learningRate = 0.05;     // TODO: make this dependant on  variable in Network class
+
     public McCullohPitts(int inputCount) {
         super(inputCount);
     }
@@ -30,7 +32,7 @@ public class McCullohPitts extends Neuron{
     @Override
     public void updateWeights(){
         for (NeuronInput input: this.getInputs()) {
-            double newWeight = input.getWeight() + 0.15 *
+            double newWeight = input.getWeight() + learningRate *
                     (this.targetVal - this.outputVal * derivativeFunction() * input.getInputVal());
             input.setWeight(newWeight);
         }

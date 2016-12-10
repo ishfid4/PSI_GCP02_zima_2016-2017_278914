@@ -1,6 +1,6 @@
 # PSI (The basics of artificial intelligence)
 
-##### This program contains:
+### This program contains:
 
 1. Digit Recognition using ENCOG library
     1. This problem uses ADALINE network
@@ -25,7 +25,7 @@
   
         
         
-###### Harmonogram:
+### Harmonogram:
 1. Opracowanie zbioru danych do uczenia oraz walidacji
 2. Implementacja pojedynczego neuronu
 3. Implementacja Perceptronu

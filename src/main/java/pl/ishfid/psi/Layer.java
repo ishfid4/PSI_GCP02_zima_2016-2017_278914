@@ -12,8 +12,7 @@ public class Layer {
     public Layer(NeuronFactory factory) {
         this.factory = factory;
     }
-
-
+    
     public ArrayList<Neuron> getNeurons() {
         return neurons;
     }

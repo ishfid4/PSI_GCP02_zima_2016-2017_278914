@@ -8,7 +8,6 @@ import static java.lang.StrictMath.exp;
  * Created by ishfi on 2.12.2016.
  */
 public class Perceptron extends Neuron{
-    private double learningRate = 0.05;     // TODO: make this dependant on  variable in Network class
     private double bias;
     private Random random;
 
@@ -35,7 +34,7 @@ public class Perceptron extends Neuron{
     }
 
     @Override
-    public void updateWeights(){
+    public void updateWeights(double learningRate){
         for (NeuronInput input: this.getInputs()) {
             double newWeight = input.getWeight() + learningRate *
                     (this.targetVal - this.outputVal * derivativeFunction() * input.getInputVal());

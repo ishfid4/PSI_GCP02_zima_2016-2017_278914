@@ -54,6 +54,8 @@ public class Neuron {
 
     public void updateWeights(){}
 
+    public void updateWeights(double learningRate){}
+
     public double getOutputVal() {
         return outputVal;
     }

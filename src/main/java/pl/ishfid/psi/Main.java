@@ -16,11 +16,11 @@ public class Main {
         PrintWriter printWriterMSE = null;
         PrintWriter printWriterValidation = null;
 
-        int epochCount = 100;
+        int epochCount = 150;
 
 //      Netowrk(inputsCount, hiddenLayerCount, hiddenLayerInputs, outputCount, learningRate, neuronFactory)
-//        Network network = new Network(256, 1, 32, 10, 0.005, new McCPforHebbFactory());
-        SingleLayerNetwork network = new SingleLayerNetwork(256, 10, 0.005, new McCPforHebbFactory());
+        Network network = new Network(256, 2, 32, 10, 0.01, new McCPforHebbFactory());
+//        SingleLayerNetwork network = new SingleLayerNetwork(256, 10, 0.01, new McCPforOjaFactory());
         int outputCount = network.dataManager.outputCount;
         double records = network.dataManager.learningRecordCount;
         ArrayList<Neuron> outputNeurons = network.getOutputLayer().getNeurons();
@@ -28,6 +28,9 @@ public class Main {
         try {
             printWriterMSE = new PrintWriter("MSE.prn");
             printWriterValidation = new PrintWriter("validationResult.prn");
+
+            // Get current time
+            long start = System.currentTimeMillis();
 
             for (int epoch = 1;  epoch <= epochCount; ++epoch){
                 double MSE = 0;
@@ -37,12 +40,12 @@ public class Main {
                     network.setTargetValues(i, true);
 
                     network.feedForward();
-    //                network.updateWeightsNoTeacher(); // For single layer network only
-    //                network.updateWeights();
-    //                network.updateWeightsHebbRuleNoTeacher(); // Still don't work ¯\_(ツ)_/¯
-    //                network.updateWeightsHebbRuleWithTeacher(); // ~~30% efficiency, (256, 1, 32, 10, 0.01
-    //                network.updateWeightsOjasRuleNoTeacher(); // Don't work ¯\_(ツ)_/¯
-    //                network.updateWeightsOjasRuleWithTeacher(); // ~~45% efficiency, (256, 1, 32, 10, 0.005
+//                    network.updateWeightsNoTeacher(); // For single layer network only
+//                    network.updateWeights();
+//                    network.updateWeightsHebbRuleNoTeacher(); // Still don't work ¯\_(ツ)_/¯
+                    network.updateWeightsHebbRuleWithTeacher(); // ~~30% efficiency, (256, 1, 32, 10, 0.01
+//                    network.updateWeightsOjasRuleNoTeacher(); // Don't work ¯\_(ツ)_/¯
+//                    network.updateWeightsOjasRuleWithTeacher(); // ~~45% efficiency, (256, 1, 32, 10, 0.005
 
                     double uniqueMSEerror;
                     for (int j = 0; j < outputCount; ++j){
@@ -56,6 +59,9 @@ public class Main {
                 //Write to file:
                 printWriterMSE.println(epoch + "\t" + MSE);
             }
+            // Get elapsed time in milliseconds
+            long elapsedTimeMillis = System.currentTimeMillis()-start;
+            float elapsedTimeSec = elapsedTimeMillis/1000F;
 
             int validationRecords = network.dataManager.validationRecordCount;
             System.out.println("Validation");
@@ -89,7 +95,8 @@ public class Main {
             System.out.println("False: " + falseAnswers);
             System.out.println("Net effectivness: " + (correctAnswers / (correctAnswers + falseAnswers)) * 100 + "%");
             //Write to file:
-            printWriterValidation.println(correctAnswers + "\t" + falseAnswers + "\t" + (correctAnswers / (correctAnswers + falseAnswers)) * 100);
+            printWriterValidation.println(correctAnswers + "\t" + falseAnswers + "\t" +
+                    (correctAnswers / (correctAnswers + falseAnswers)) * 100 + "\t" + elapsedTimeSec);
 
             System.out.println("Digit : correct|false");
             for (int i = 0; i < 10; ++i){

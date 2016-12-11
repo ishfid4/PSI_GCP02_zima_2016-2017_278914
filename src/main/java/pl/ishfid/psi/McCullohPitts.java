@@ -1,12 +1,12 @@
 package pl.ishfid.psi;
 
-import static java.lang.StrictMath.exp;
+import static java.lang.StrictMath.*;
 
 /**
  * Created by ishfi on 02.12.2016.
  */
 public class McCullohPitts extends Neuron{
-    private double learningRate = 0.05;     // TODO: make this dependant on  variable in Network class
+    private double learningRate = 0.005;     // TODO: make this dependant on  variable in Network class
 
     public McCullohPitts(int inputCount) {
         super(inputCount);
@@ -24,9 +24,13 @@ public class McCullohPitts extends Neuron{
     // Calculate output including activation function
     @Override
     public void calcOutput(){
-        double out = 1 + exp(-calcSum());
+//        double out = 1 + exp(-calcSum());
+//        this.outputVal = (1 / out);
 
-        this.outputVal = (1 / out);
+        //This activation function only works with Hebbs rule,
+        //Probably its due to large output values from calcSum()
+        double out = 1 + abs(calcSum());
+        this.outputVal = 0.1 * (calcSum() / out);
     }
 
     @Override

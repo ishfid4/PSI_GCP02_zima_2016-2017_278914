@@ -15,7 +15,7 @@ public class Main {
         int epochCount = 100;
 
 //      Netowrk(inputsCount, hiddenLayerCount, hiddenLayerInputs, outputCount, learningRate, neuronFactory)
-        Network network = new Network(256, 1, 256, 10, 0.05, new McCullohPittsFactory());
+        Network network = new Network(256, 2, 32, 10, 0.01, new McCullohPittsFactory());
         int outputCount = network.dataManager.outputCount;
         double records = network.dataManager.learningRecordCount;
         ArrayList<Neuron> outputNeurons = network.getOutputLayer().getNeurons();
@@ -29,7 +29,8 @@ public class Main {
 
                 network.feedForward();
                 network.updateWeights();
-
+//                network.updateWeightsHebbRuleNoTeacher(); //Still don't work ¯\_(ツ)_/¯
+//                network.updateWeightsHebbRuleWithTeacher(); // ~~30% efficiency
                 double uniqueMSEerror;
                 for (int j = 0; j < outputCount; ++j){
                     double difference = outputNeurons.get(j).getTargetVal() - outputNeurons.get(j).getOutputVal();

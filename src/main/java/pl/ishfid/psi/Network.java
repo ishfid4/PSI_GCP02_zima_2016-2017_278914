@@ -147,6 +147,36 @@ public class Network {
         }
     }
 
+    // Updating signal error Backpropagation
+    public void updateAdalineSignalError(){
+        for (Neuron output : this.outputLayer.getNeurons()){
+            output.calcAdalineSignalError();
+        }
+        int lastHiddenLayer = this.hiddenLayers.size() - 1;
+
+        for (int layer = lastHiddenLayer; layer >= 0; --layer){
+            ArrayList<Neuron> actualHiddenLayerNeurons = this.hiddenLayers.get(layer).getNeurons();
+            for (int neuron = 0; neuron < actualHiddenLayerNeurons.size(); ++neuron){
+                double adalineSignalError = 0;
+
+                if (layer == lastHiddenLayer){
+                    ArrayList<Neuron> outputLayerNeurons = this.outputLayer.getNeurons();
+                    for (int i = 0; i < outputLayerNeurons.size(); ++i){
+                        adalineSignalError += outputLayerNeurons.get(i).getInputs().get(neuron).getWeight()
+                                * outputLayerNeurons.get(i).getAdalineSignalError();
+                    }
+                }else{
+                    ArrayList<Neuron> nextHiddenLayerNeurons = this.hiddenLayers.get(layer + 1).getNeurons();
+                    for (int i = 0; i < nextHiddenLayerNeurons.size(); ++i){
+                        adalineSignalError += nextHiddenLayerNeurons.get(i).getInputs().get(neuron).getWeight()
+                                * nextHiddenLayerNeurons.get(i).getAdalineSignalError();
+                    }
+                }
+                actualHiddenLayerNeurons.get(neuron).setAdalineSignalError(adalineSignalError);
+            }
+        }
+    }
+
     //Updating weights in each neuron, using pre-calculated signal error
     public void updateWeights(){
         this.updateSignalErrors();
@@ -165,13 +195,67 @@ public class Network {
             }
         }
 
+        ArrayList<Neuron> neurons = this.outputLayer.getNeurons();
         for (int i = 0; i < this.outputLayer.getSize(); ++i){
             ArrayList<NeuronInput> inputs = this.outputLayer.getNeurons().get(i).getInputs();
-            ArrayList<Neuron> neurons = this.outputLayer.getNeurons();
             for (int j = 0; j < inputs.size(); ++j){
                 double newWeight = inputs.get(j).getWeight() + learningRate // learning factor
                         * neurons.get(i).getSignalError() * neurons.get(i).derivativeFunction()
                         * inputs.get(j).getInputVal();
+                neurons.get(i).getInputs().get(j).setWeight(newWeight);
+            }
+        }
+    }
+
+    public void updateWeightsHebbRuleNoTeacher(){
+         for (int i = 0; i < this.hiddenLayers.size(); ++i){
+             int layerSize = this.hiddenLayers.get(i).getSize();
+             for (int j = 0; j < layerSize; ++j){
+                 ArrayList<NeuronInput> inputs = this.hiddenLayers.get(i).getNeurons().get(j).getInputs();
+                 ArrayList<Neuron> neurons = this.hiddenLayers.get(i).getNeurons();
+                 for (int k = 0; k < inputs.size(); ++k){
+                     double newWeight = inputs.get(k).getWeight() +  learningRate // learning factor
+                                 * neurons.get(j).getOutputVal()
+                                 * inputs.get(k).getInputVal();
+                     neurons.get(j).getInputs().get(k).setWeight(newWeight);
+                 }
+             }
+         }
+
+        ArrayList<Neuron> neurons = this.outputLayer.getNeurons();
+        for (int i = 0; i < this.outputLayer.getSize(); ++i){
+            ArrayList<NeuronInput> inputs = this.outputLayer.getNeurons().get(i).getInputs();
+            for (int j = 0; j < inputs.size(); ++j){
+                double newWeight = inputs.get(j).getWeight() + learningRate // learning factor
+                        * neurons.get(i).getOutputVal()
+                        * inputs.get(j).getInputVal();
+                neurons.get(i).getInputs().get(j).setWeight(newWeight);
+            }
+        }
+    }
+
+    public void updateWeightsHebbRuleWithTeacher(){
+        for (int i = 0; i < this.hiddenLayers.size(); ++i){
+            int layerSize = this.hiddenLayers.get(i).getSize();
+            for (int j = 0; j < layerSize; ++j){
+                ArrayList<NeuronInput> inputs = this.hiddenLayers.get(i).getNeurons().get(j).getInputs();
+                ArrayList<Neuron> neurons = this.hiddenLayers.get(i).getNeurons();
+                for (int k = 0; k < inputs.size(); ++k){
+                    double newWeight = inputs.get(k).getWeight() + learningRate // learning factor
+                                * neurons.get(j).getTargetVal()
+                                * inputs.get(k).getInputVal();
+                    neurons.get(j).getInputs().get(k).setWeight(newWeight);
+                }
+            }
+        }
+
+        ArrayList<Neuron> neurons = this.outputLayer.getNeurons();
+        for (int i = 0; i < this.outputLayer.getSize(); ++i){
+            ArrayList<NeuronInput> inputs = this.outputLayer.getNeurons().get(i).getInputs();
+            for (int j = 0; j < inputs.size(); ++j){
+                double newWeight = inputs.get(j).getWeight() + learningRate // learning factor
+                            * neurons.get(i).getTargetVal()
+                            * inputs.get(j).getInputVal();
                 neurons.get(i).getInputs().get(j).setWeight(newWeight);
             }
         }

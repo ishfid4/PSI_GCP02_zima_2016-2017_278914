@@ -8,6 +8,7 @@ import java.util.ArrayList;
 public class Neuron {
     protected double outputVal;
     protected double signalError;
+    protected double adalineSignalError;
     protected double inputsSumVal;
     protected double targetVal;
     protected ArrayList<NeuronInput> inputs = new ArrayList<NeuronInput>();
@@ -30,6 +31,11 @@ public class Neuron {
 
     public void calcSignalError() {
         this.signalError = this.targetVal - this.outputVal;
+    }
+
+    public void calcAdalineSignalError(){
+//        this.adalineSignalError = this.targetVal - this.calcSum();
+        this.adalineSignalError = Math.pow(this.targetVal - this.outputVal, 2); //is it correct?
     }
 
     protected double derivativeFunction(){
@@ -78,5 +84,13 @@ public class Neuron {
 
     public void setTargetVal(double targetVal) {
         this.targetVal = targetVal;
+    }
+
+    public double getAdalineSignalError() {
+        return adalineSignalError;
+    }
+
+    public void setAdalineSignalError(double adalineSignalError) {
+        this.adalineSignalError = adalineSignalError;
     }
 }

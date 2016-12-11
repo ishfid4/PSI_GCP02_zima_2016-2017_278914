@@ -260,4 +260,58 @@ public class Network {
             }
         }
     }
+
+    public void updateWeightsOjasRuleNoTeacher(){
+        for (int i = 0; i < this.hiddenLayers.size(); ++i){
+            int layerSize = this.hiddenLayers.get(i).getSize();
+            for (int j = 0; j < layerSize; ++j){
+                ArrayList<NeuronInput> inputs = this.hiddenLayers.get(i).getNeurons().get(j).getInputs();
+                ArrayList<Neuron> neurons = this.hiddenLayers.get(i).getNeurons();
+                for (int k = 0; k < inputs.size(); ++k){
+                    double newWeight = inputs.get(k).getWeight() +  learningRate // learning factor
+                            * neurons.get(i).getOutputVal()
+                            * (inputs.get(k).getInputVal() - (neurons.get(j).getOutputVal()*inputs.get(k).getWeight()));
+                    neurons.get(j).getInputs().get(k).setWeight(newWeight);
+                }
+            }
+        }
+
+        ArrayList<Neuron> neurons = this.outputLayer.getNeurons();
+        for (int i = 0; i < this.outputLayer.getSize(); ++i){
+            ArrayList<NeuronInput> inputs = this.outputLayer.getNeurons().get(i).getInputs();
+            for (int j = 0; j < inputs.size(); ++j){
+                double newWeight = inputs.get(j).getWeight() + learningRate // learning factor
+                        * neurons.get(i).getOutputVal()
+                        * (inputs.get(j).getInputVal() - neurons.get(i).getOutputVal() * inputs.get(j).getWeight());
+                neurons.get(i).getInputs().get(j).setWeight(newWeight);
+            }
+        }
+    }
+
+    public void updateWeightsOjasRuleWithTeacher(){
+        for (int i = 0; i < this.hiddenLayers.size(); ++i){
+            int layerSize = this.hiddenLayers.get(i).getSize();
+            for (int j = 0; j < layerSize; ++j){
+                ArrayList<NeuronInput> inputs = this.hiddenLayers.get(i).getNeurons().get(j).getInputs();
+                ArrayList<Neuron> neurons = this.hiddenLayers.get(i).getNeurons();
+                for (int k = 0; k < inputs.size(); ++k){
+                    double newWeight = inputs.get(k).getWeight() +  learningRate // learning factor
+                            * neurons.get(i).getTargetVal()
+                            * (inputs.get(k).getInputVal() - (neurons.get(j).getTargetVal()*inputs.get(k).getWeight()));
+                    neurons.get(j).getInputs().get(k).setWeight(newWeight);
+                }
+            }
+        }
+
+        ArrayList<Neuron> neurons = this.outputLayer.getNeurons();
+        for (int i = 0; i < this.outputLayer.getSize(); ++i){
+            ArrayList<NeuronInput> inputs = this.outputLayer.getNeurons().get(i).getInputs();
+            for (int j = 0; j < inputs.size(); ++j){
+                double newWeight = inputs.get(j).getWeight() + learningRate // learning factor
+                        * neurons.get(i).getTargetVal()
+                        * (inputs.get(j).getInputVal() - neurons.get(i).getTargetVal() * inputs.get(j).getWeight());
+                neurons.get(i).getInputs().get(j).setWeight(newWeight);
+            }
+        }
+    }
 }

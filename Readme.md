@@ -34,8 +34,10 @@
 6. Implementacja sieci neuronowej
 7. Propagacja i obliczenia sygnału błędu nuronów
 8. Aktualizowanie wag neuronów w całej sieci neuronowej
-9. Implementacja reguły uczenia Hebba
+9. Implementacja reguły uczenia Hebba dla sieci
     1. Z nauczycielem 
     2. Bez nauczyciela (coś nie działa ¯\\\_(ツ)_/¯)
-    3. Bez nauczyciela, reguła Oji
+10. Implementacja reguły Oja dla sieci
+    1. Z nauczycielem (podobnie jak u Hebb'a?)
+    2. Bez nauczyciela (nie działa ¯\\\_(ツ)_/¯)
 99. Dalsze rozwijanie sieci neuronowej

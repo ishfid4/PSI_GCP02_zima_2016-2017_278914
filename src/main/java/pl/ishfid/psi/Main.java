@@ -4,6 +4,7 @@ import pl.ishfid.psi.digitRecognitionEncog.Data;
 import pl.ishfid.psi.digitRecognitionEncog.Hebb;
 
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.ArrayList;
 
 /**
@@ -12,6 +13,9 @@ import java.util.ArrayList;
 public class Main {
 
     public static void main(String[] args) throws IOException {
+        PrintWriter printWriterMSE = null;
+        PrintWriter printWriterValidation = null;
+
         int epochCount = 100;
 
 //      Netowrk(inputsCount, hiddenLayerCount, hiddenLayerInputs, outputCount, learningRate, neuronFactory)
@@ -21,69 +25,86 @@ public class Main {
         double records = network.dataManager.learningRecordCount;
         ArrayList<Neuron> outputNeurons = network.getOutputLayer().getNeurons();
 
-        for (int epoch = 1;  epoch <= epochCount; ++epoch){
-            double MSE = 0;
+        try {
+            printWriterMSE = new PrintWriter("MSE.prn");
+            printWriterValidation = new PrintWriter("validationResult.prn");
 
-            for (int i = 0; i < records; i++){
-                network.setInputValues(i, true);
-                network.setTargetValues(i, true);
+            for (int epoch = 1;  epoch <= epochCount; ++epoch){
+                double MSE = 0;
+
+                for (int i = 0; i < records; i++){
+                    network.setInputValues(i, true);
+                    network.setTargetValues(i, true);
+
+                    network.feedForward();
+    //                network.updateWeightsNoTeacher(); // For single layer network only
+    //                network.updateWeights();
+    //                network.updateWeightsHebbRuleNoTeacher(); // Still don't work ¯\_(ツ)_/¯
+    //                network.updateWeightsHebbRuleWithTeacher(); // ~~30% efficiency, (256, 1, 32, 10, 0.01
+    //                network.updateWeightsOjasRuleNoTeacher(); // Don't work ¯\_(ツ)_/¯
+    //                network.updateWeightsOjasRuleWithTeacher(); // ~~45% efficiency, (256, 1, 32, 10, 0.005
+
+                    double uniqueMSEerror;
+                    for (int j = 0; j < outputCount; ++j){
+                        double difference = outputNeurons.get(j).getTargetVal() - outputNeurons.get(j).getOutputVal();
+                        uniqueMSEerror = Math.pow(difference, 2);
+                        MSE += uniqueMSEerror;
+                    }
+                }
+                MSE /= (records);
+                System.out.println("Epoch: " + epoch + ", MSE: " + MSE);
+                //Write to file:
+                printWriterMSE.println(epoch + "\t" + MSE);
+            }
+
+            int validationRecords = network.dataManager.validationRecordCount;
+            System.out.println("Validation");
+
+            double correctAnswers = 0;
+            double falseAnswers = 0;
+
+            double[] digitCorrectAnswers = new double[10];
+            double[] digitFalseAnswers = new double[10];
+
+            for (int i = 0; i < validationRecords; i++){
+                ArrayList<Double> targetOutputs = network.dataManager.validationOutputDataSet.get(i);
+
+                network.setInputValues(i, false);
+                network.setTargetValues(i, false); // validation
 
                 network.feedForward();
-//                network.updateWeightsNoTeacher(); // For single layer network only
-//                network.updateWeights();
-//                network.updateWeightsHebbRuleNoTeacher(); // Still don't work ¯\_(ツ)_/¯
-//                network.updateWeightsHebbRuleWithTeacher(); // ~~30% efficiency, (256, 1, 32, 10, 0.01
-//                network.updateWeightsOjasRuleNoTeacher(); // Don't work ¯\_(ツ)_/¯
-//                network.updateWeightsOjasRuleWithTeacher(); // ~~45% efficiency, (256, 1, 32, 10, 0.005
 
-                double uniqueMSEerror;
-                for (int j = 0; j < outputCount; ++j){
-                    double difference = outputNeurons.get(j).getTargetVal() - outputNeurons.get(j).getOutputVal();
-                    uniqueMSEerror = Math.pow(difference, 2);
-                    MSE += uniqueMSEerror;
+                int answerDigit = (int)networkAnswer(outputNeurons);
+                int targetDigit = (int)targetAnswer(targetOutputs);
+                if (answerDigit == targetDigit){
+                    digitCorrectAnswers[answerDigit]++;
+                    correctAnswers++;
+                }else{
+                    digitFalseAnswers[targetDigit]++;
+                    falseAnswers++;
                 }
             }
-            MSE /= (records);
-            System.out.println("Epoch: " + epoch + ", MSE: " + MSE);
-        }
 
-        int validationRecords = network.dataManager.validationRecordCount;
-        System.out.println("Validation");
+            System.out.println("Correct: " + correctAnswers);
+            System.out.println("False: " + falseAnswers);
+            System.out.println("Net effectivness: " + (correctAnswers / (correctAnswers + falseAnswers)) * 100 + "%");
+            //Write to file:
+            printWriterValidation.println(correctAnswers + "\t" + falseAnswers + "\t" + (correctAnswers / (correctAnswers + falseAnswers)) * 100);
 
-        double correctAnswers = 0;
-        double falseAnswers = 0;
-
-        double[] digitCorrectAnswers = new double[10];
-        double[] digitFalseAnswers = new double[10];
-
-        for (int i = 0; i < validationRecords; i++){
-            ArrayList<Double> targetOutputs = network.dataManager.validationOutputDataSet.get(i);
-
-            network.setInputValues(i, false);
-            network.setTargetValues(i, false); // validation
-
-            network.feedForward();
-
-            int answerDigit = (int)networkAnswer(outputNeurons);
-            int targetDigit = (int)targetAnswer(targetOutputs);
-            if (answerDigit == targetDigit){
-                digitCorrectAnswers[answerDigit]++;
-                correctAnswers++;
-            }else{
-                digitFalseAnswers[targetDigit]++;
-                falseAnswers++;
+            System.out.println("Digit : correct|false");
+            for (int i = 0; i < 10; ++i){
+                System.out.println(i + " : \t" + digitCorrectAnswers[i] + "  \t" + digitFalseAnswers[i]);
+                //Write to file:
+                printWriterValidation.println(i + "\t" + digitCorrectAnswers[i] + "\t" + digitFalseAnswers[i]);
+            }
+        }finally {
+            if (printWriterMSE != null) {
+                printWriterMSE.close();
+            }
+            if (printWriterValidation != null) {
+                printWriterValidation.close();
             }
         }
-
-        System.out.println("Correct: " + correctAnswers);
-        System.out.println("False: " + falseAnswers);
-        System.out.println("Net effectivness: " + (correctAnswers / (correctAnswers + falseAnswers)) * 100 + "%");
-
-        System.out.println("Digit : correct|false");
-        for (int i = 0; i < 10; ++i){
-            System.out.println(i + " : \t" + digitCorrectAnswers[i] + "  \t" + digitFalseAnswers[i]);
-        }
-
 
 
         //----------Random trash---------------

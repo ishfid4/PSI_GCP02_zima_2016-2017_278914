@@ -40,4 +40,5 @@
 10. Implementacja reguły Oja dla sieci
     1. Z nauczycielem (podobnie jak u Hebb'a?)
     2. Bez nauczyciela (nie działa ¯\\\_(ツ)_/¯)
+11. Stworzenie możliwości uruchamiania jednowarstwowych sieci (kompatybilne ze wszystkimi zaimplementowanymi regułami) 
 99. Dalsze rozwijanie sieci neuronowej

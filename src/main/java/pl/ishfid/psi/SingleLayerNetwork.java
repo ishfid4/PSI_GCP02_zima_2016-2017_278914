@@ -117,4 +117,28 @@ public class SingleLayerNetwork {
             }
         }
     }
+
+    // Comeritive Learning Algorithm Is it correct?? TODO: Check if it's realy ok
+    public void updateWeightsWinnerTakesAll(){
+        ArrayList<Neuron> neurons = this.outputLayer.getNeurons();
+
+        int winnerIndex = 0;
+        for (int i = 0; i < 10; ++i){
+            if (neurons.get(winnerIndex).getOutputVal() <= neurons.get(i).getOutputVal()){
+                winnerIndex = i;
+            }
+        }
+
+        ArrayList<NeuronInput> inputs = neurons.get(winnerIndex).getInputs();
+        double argmax = 0.0;
+        int inputIndex = 0;
+        for (int j = 0; j < inputs.size(); ++j){
+            if (inputs.get(inputIndex).getOutputVal() <= inputs.get(j).getOutputVal()){
+                inputIndex = j;
+            }
+        }
+        double newWeight = inputs.get(inputIndex).getWeight() + learningRate * inputs.get(inputIndex).getInputVal();
+        newWeight = newWeight / Math.abs(newWeight);
+        neurons.get(winnerIndex).getInputs().get(inputIndex).setWeight(newWeight);
+    }
 }

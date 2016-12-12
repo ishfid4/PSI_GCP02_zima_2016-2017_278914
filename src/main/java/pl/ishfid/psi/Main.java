@@ -11,6 +11,8 @@ import java.util.ArrayList;
  * Created by ishfid on 09.10.16.
  */
 public class Main {
+    // TODO: Hebb's rule -> forgetting factor | but Heb's rule is probably broken
+    // TODO: make DataManager more flexible (size of learningSet and validSet should be dependant on variables)
 
     public static void main(String[] args) throws IOException {
         PrintWriter printWriterMSE = null;
@@ -19,8 +21,8 @@ public class Main {
         int epochCount = 150;
 
 //      Netowrk(inputsCount, hiddenLayerCount, hiddenLayerInputs, outputCount, learningRate, neuronFactory)
-        Network network = new Network(256, 2, 32, 10, 0.01, new McCPforHebbFactory());
-//        SingleLayerNetwork network = new SingleLayerNetwork(256, 10, 0.01, new McCPforOjaFactory());
+//        Network network = new Network(256, 2, 32, 10, 0.01, new McCPforHebbFactory());
+        SingleLayerNetwork network = new SingleLayerNetwork(256, 10, 0.001, new McCullohPittsFactory());
         int outputCount = network.dataManager.outputCount;
         double records = network.dataManager.learningRecordCount;
         ArrayList<Neuron> outputNeurons = network.getOutputLayer().getNeurons();
@@ -41,11 +43,12 @@ public class Main {
 
                     network.feedForward();
 //                    network.updateWeightsNoTeacher(); // For single layer network only
-//                    network.updateWeights();
+                    network.updateWeights();
 //                    network.updateWeightsHebbRuleNoTeacher(); // Still don't work ¯\_(ツ)_/¯
-                    network.updateWeightsHebbRuleWithTeacher(); // ~~30% efficiency, (256, 1, 32, 10, 0.01
+//                    network.updateWeightsHebbRuleWithTeacher(); // ~~30% efficiency, (256, 1, 32, 10, 0.01
 //                    network.updateWeightsOjasRuleNoTeacher(); // Don't work ¯\_(ツ)_/¯
 //                    network.updateWeightsOjasRuleWithTeacher(); // ~~45% efficiency, (256, 1, 32, 10, 0.005
+//                    network.updateWeightsWinnerTakesAll(); // learning factor between 0.8 <-> 0.1
 
                     double uniqueMSEerror;
                     for (int j = 0; j < outputCount; ++j){

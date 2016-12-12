@@ -3,22 +3,24 @@
 ### This program contains:
 
 1. Digit Recognition using ENCOG library
-    1. This problem uses ADALINE network
+    1. This problem uses ADALINE network (example)
 2. Resolving XOR and OR problem using ENCOG library
     1. OR is processed using single layer network
     2. XOR uses multi layer network
 3. Implementation of Neural Network, it contains:
     1. Data set creation from file
     2. McCullohPitts neuron model
-    3. Implementation of single neuron
-    4. Implementation of layer of neurons
-    5. Implementation of network
+    4. Perceptron model
+    5. Implementation of single neuron
+    6. Implementation of layer of neurons
+    7. Implementation of network
         1. Input layer
         2. Hidden layers
         4. Output layers
         5. Feeding all layers with input informations
         6. Updating weights of all neurons with calculated signal error
-    4. Data used for data recognition comes from:
+    8. Implementation of various network learning 
+    9. Data used for data recognition comes from:
         https://archive.ics.uci.edu/ml/datasets/Semeion+Handwritten+Digit
     
     
@@ -40,5 +42,5 @@
 10. Implementacja reguły Oja dla sieci
     1. Z nauczycielem (podobnie jak u Hebb'a?)
     2. Bez nauczyciela (nie działa ¯\\\_(ツ)_/¯)
-11. Stworzenie możliwości uruchamiania jednowarstwowych sieci (kompatybilne ze wszystkimi zaimplementowanymi regułami) 
+11. Stworzenie możliwości uruchamiania jednowarstwowych sieci (kompatybilne ze wszystkimi zaimplementowanymi regułami)
 99. Dalsze rozwijanie sieci neuronowej

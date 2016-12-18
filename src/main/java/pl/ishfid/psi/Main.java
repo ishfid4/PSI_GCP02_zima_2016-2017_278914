@@ -22,7 +22,7 @@ public class Main {
 
 //      Netowrk(inputsCount, hiddenLayerCount, hiddenLayerInputs, outputCount, learningRate, neuronFactory)
 //        Network network = new Network(256, 2, 32, 10, 0.01, new McCPforHebbFactory());
-        SingleLayerNetwork network = new SingleLayerNetwork(256, 10, 0.001, new McCullohPittsFactory());
+        SingleLayerNetwork network = new SingleLayerNetwork(256, 10, 0.4, new McCullohPittsFactory());
         int outputCount = network.dataManager.outputCount;
         double records = network.dataManager.learningRecordCount;
         ArrayList<Neuron> outputNeurons = network.getOutputLayer().getNeurons();

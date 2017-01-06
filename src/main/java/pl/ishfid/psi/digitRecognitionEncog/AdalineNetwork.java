@@ -9,64 +9,55 @@ import org.encog.neural.networks.BasicNetwork;
 import org.encog.neural.networks.training.simple.TrainAdaline;
 import org.encog.neural.pattern.ADALINEPattern;
 
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.PrintWriter;
+
 /**
  * Created by ishfi on 27.11.2016.
  */
 public class AdalineNetwork {
-    private int inputNeurons;
-    private int outputNeurons;
-    public final static int char_width = 5;
-    public final static int char_height = 7;
-    public static String[][] digits;
+    private static int inputNeurons = 256;
+    private static int outputNeurons = 10;
+    private double learningRate;
+    private double minError;
+    private static double[][] trainingDigits;
+    private static double[][] trainingDigitsValidiation;
+    private static double[][] testDigits;
+    private static double[][] testDigitsValidiation;
+    private static Data data = new Data();
 
-    public static String[][] digitstest;
-
-    public AdalineNetwork(Data data) {
-        this.digits = data.getDigits();
-        this.digitstest = data.getDigitstest();
+    public AdalineNetwork(double learningRate, double minError) throws IOException {
+        this.learningRate = learningRate;
+        this.minError = minError;
+        data.importData("segregatedSmallSet.prn");
+        trainingDigits = data.getInputDataSet();
+        testDigits = data.getValidationDataSet();
+        trainingDigitsValidiation = data.getInputVerificationSet();
+        testDigitsValidiation = data.getValidationOutputDataSet();
     }
 
-    public static MLData image2data(String[] image)
-    {
-        MLData result = new BasicMLData(char_width * char_height);
-        int isFieldNotEmpty;
+    private static MLData convertToMLData(double digit[]) {
+        MLData result = new BasicMLData(digit.length);
 
-        for(int row = 0; row < char_height; row++)
+        for(int i = 0; i < digit.length; i++)
         {
-            for(int col = 0; col < char_width; col++)
-            {
-                int index = (row* char_width) + col;
-                char ch = image[row].charAt(col);
-                if(ch=='O')
-                    isFieldNotEmpty = 1;
-                else
-                    isFieldNotEmpty = -1;
-
-                result.setData(index,isFieldNotEmpty);
-            }
+            result.setData(i,digit[i]);
         }
 
         return result;
     }
 
-    public static MLDataSet generateTraining()
+    private static MLDataSet generateTraining()
     {
         MLDataSet result = new BasicMLDataSet();
-        for(int i = 0; i < digits.length; i++)
+        for(int i = 0; i < trainingDigits.length; i++)
         {
-            BasicMLData ideal = new BasicMLData(digits.length);
-
             // setup input
-            MLData input = image2data(digits[i]);
+            MLData input = convertToMLData(trainingDigits[i]);
 
             // setup ideal
-            for(int j = 0; j < digits.length; j++)
-            {
-                if( j==i )
-                    ideal.setData(j,1);
-                else
-                    ideal.setData(j,-1);
-            }
+            BasicMLData ideal = (BasicMLData)convertToMLData(trainingDigitsValidiation[i]);
 
             // add training element
             result.add(input,ideal);
@@ -74,45 +65,78 @@ public class AdalineNetwork {
         return result;
     }
 
-    public void execute(){
-        int inputNeurons = char_width * char_height;
-        int outputNeurons = digits.length;
+    public void execute() throws FileNotFoundException {
+        PrintWriter printWriterMSE = null;
+        PrintWriter printWriterValidation = null;
+        int networkAnswers[] = new int[10];
 
         ADALINEPattern pattern = new ADALINEPattern();
         pattern.setInputNeurons(inputNeurons);
         pattern.setOutputNeurons(outputNeurons);
         BasicNetwork network = (BasicNetwork)pattern.generate();
 
-        // train it
+        // Setting training
         MLDataSet training = generateTraining();
-        MLTrain train = new TrainAdaline(network,training,0.01);
+        MLTrain train = new TrainAdaline(network,training,learningRate);
 
-        int epoch = 0;
-        do {
-            train.iteration();
-            //       System.out.println(train.getError());
-            System.out.println("Epoch #" + epoch + " Error:" + train.getError());
-            epoch++;
-        } while(train.getError() > 0.01);
+        try{
+            printWriterMSE = new PrintWriter("MSE.prn");
+            printWriterValidation = new PrintWriter("validationResult.prn");
 
-        //
-        System.out.println("Error:" + network.calculateError(training));
+            // train it
+            int epoch = 1;
+            do {
+                train.iteration();
+                //       System.out.println(train.getError());
+                System.out.println("Epoch #" + epoch + " Error:" + train.getError());
+                printWriterMSE.println(epoch + "\t" + train.getError());
+                epoch++;
+            } while(train.getError() > minError);
 
-        // test it
-        for(int i = 0; i < digitstest.length; i++)
-        {
-            int output = network.winner(image2data(digitstest[i]));
+            System.out.println("Network Error:" + network.calculateError(training));
 
-            for(int j = 0; j < char_height; j++)
+            double correctAnswers = 0;
+            double falseAnswers = 0;
+
+            double[] digitCorrectAnswers = new double[10];
+            double[] digitFalseAnswers = new double[10];
+
+            // testing it
+            for(int i = 0; i < testDigits.length; i++)
             {
-                if( j == char_height - 1 )
-                    System.out.println(digitstest[i][j] + " -> " + output);
-                else
-                    System.out.println(digitstest[i][j]);
+                int output = network.winner(convertToMLData(testDigits[i]));
 
+                for (int j = 0; j < outputNeurons; j++){
+                    if (testDigitsValidiation[i][j] != 0){
+                        if (output == j){
+                            digitCorrectAnswers[output]++;
+                            correctAnswers++;
+                        }else{
+                            digitFalseAnswers[j]++;
+                            falseAnswers++;
+                        }
+                    }
+                }
             }
 
-            System.out.println();
+            System.out.println("Correct: " + correctAnswers);
+            System.out.println("False: " + falseAnswers);
+            System.out.println("Net effectivness: " + (correctAnswers / (correctAnswers + falseAnswers)) * 100 + "%");
+
+            System.out.println("Digit : correct|false");
+            for (int i = 0; i < 10; ++i){
+                System.out.println(i + " : \t" + digitCorrectAnswers[i] + "  \t" + digitFalseAnswers[i]);
+                //Write to file:
+                printWriterValidation.println(i + "\t" + digitCorrectAnswers[i] + "\t" + digitFalseAnswers[i]);
+            }
+
+        }finally {
+            if (printWriterMSE != null) {
+                printWriterMSE.close();
+            }
+            if (printWriterValidation != null) {
+                printWriterValidation.close();
+            }
         }
     }
 

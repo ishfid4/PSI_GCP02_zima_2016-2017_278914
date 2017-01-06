@@ -1,7 +1,7 @@
 package pl.ishfid.psi;
 
+import pl.ishfid.psi.digitRecognitionEncog.AdalineNetwork;
 import pl.ishfid.psi.digitRecognitionEncog.Data;
-import pl.ishfid.psi.digitRecognitionEncog.Hebb;
 
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -14,7 +14,7 @@ public class Main {
     // TODO: Hebb's rule -> forgetting factor | but Heb's rule is probably broken
     // TODO: make DataManager more flexible (size of learningSet and validSet should be dependant on variables)
 
-    public static void main(String[] args) throws IOException {
+    public static void main(String[] args) throws IOException {/*
         PrintWriter printWriterMSE = null;
         PrintWriter printWriterValidation = null;
 
@@ -115,17 +115,12 @@ public class Main {
                 printWriterValidation.close();
             }
         }
-
-
-        //----------Random trash---------------
-//        Data data = new Data();
-//        Hebb hebbNetwork = new Hebb(35, 0.7);
-//        hebbNetwork.run(data.getDigits());
+*/
 
         //------------Digits recognition using Adaline------------
-//        Data data = new Data();
-//        AdalineNetwork adalineNetwork = new AdalineNetwork(data);
-//        adalineNetwork.execute();
+        Data data = new Data();
+        AdalineNetwork adalineNetwork = new AdalineNetwork(0.001, 0.01);
+        adalineNetwork.execute();
 
         //-----------------Old implemetations---------------------
 //        LogicalFunctions logicalFunctions = new LogicalFunctions();

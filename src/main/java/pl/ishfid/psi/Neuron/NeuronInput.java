@@ -1,4 +1,4 @@
-package pl.ishfid.psi;
+package pl.ishfid.psi.Neuron;
 
 import java.util.Random;
 
@@ -8,8 +8,6 @@ import java.util.Random;
 public class NeuronInput {
     protected double inputVal;
     protected double weight;
-    private double rangeMin = -1;
-    private double rangeMax = 1;
     private Random random;
 
     public NeuronInput() {
@@ -30,8 +28,9 @@ public class NeuronInput {
     }
 
     protected double randnomWeight() {
-        double randomValue = rangeMin + (rangeMax - rangeMin) * random.nextDouble();
-        return randomValue;
+        double rangeMax = 1;
+        double rangeMin = -1;
+        return rangeMin + (rangeMax - rangeMin) * random.nextDouble();
     }
 
     public double getInputVal() {

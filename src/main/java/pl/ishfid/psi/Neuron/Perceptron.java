@@ -1,8 +1,6 @@
-package pl.ishfid.psi;
+package pl.ishfid.psi.Neuron;
 
 import java.util.Random;
-
-import static java.lang.StrictMath.exp;
 
 /**
  * Created by ishfi on 2.12.2016.

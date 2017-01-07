@@ -1,4 +1,4 @@
-package pl.ishfid.psi;
+package pl.ishfid.psi.Neuron;
 
 import static java.lang.StrictMath.*;
 
@@ -15,7 +15,7 @@ public class McCullohPitts extends Neuron{
     }
 
     @Override
-    protected double derivativeFunction(){
+    public double derivativeFunction(){
         return (1 - this.getOutputVal()) * this.getOutputVal();
     }
 

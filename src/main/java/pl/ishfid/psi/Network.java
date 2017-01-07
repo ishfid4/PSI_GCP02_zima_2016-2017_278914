@@ -1,5 +1,9 @@
 package pl.ishfid.psi;
 
+import pl.ishfid.psi.Neuron.Neuron;
+import pl.ishfid.psi.Neuron.NeuronFactory;
+import pl.ishfid.psi.Neuron.NeuronInput;
+
 import java.io.IOException;
 import java.util.ArrayList;
 

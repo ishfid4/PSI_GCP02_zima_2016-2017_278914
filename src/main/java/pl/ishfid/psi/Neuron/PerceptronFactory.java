@@ -1,16 +1,16 @@
-package pl.ishfid.psi;
+package pl.ishfid.psi.Neuron;
 
 /**
  * Created by ishfi on 10.12.2016.
  */
-public class McCullohPittsFactory implements NeuronFactory {
+public class PerceptronFactory implements NeuronFactory {
     @Override
     public Neuron createNeuron(int inputCount, boolean inInputLayer) {
-        return new McCullohPitts(inputCount, inInputLayer);
+        return new Perceptron(inputCount, inInputLayer);
     }
 
     @Override
     public Neuron createNeuron(int inputCount) {
-        return new McCullohPitts(inputCount);
+        return new Perceptron(inputCount);
     }
 }

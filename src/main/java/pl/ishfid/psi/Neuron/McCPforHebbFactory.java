@@ -1,4 +1,4 @@
-package pl.ishfid.psi;
+package pl.ishfid.psi.Neuron;
 
 /**
  * Created by ishfi on 11.12.2016.

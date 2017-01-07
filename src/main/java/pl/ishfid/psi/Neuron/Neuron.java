@@ -1,4 +1,4 @@
-package pl.ishfid.psi;
+package pl.ishfid.psi.Neuron;
 
 import java.util.ArrayList;
 
@@ -38,7 +38,7 @@ public class Neuron {
         this.adalineSignalError = Math.pow(this.targetVal - this.outputVal, 2); //is it correct?
     }
 
-    protected double derivativeFunction(){
+    public double derivativeFunction(){
         return 1;
     }
 
@@ -52,6 +52,7 @@ public class Neuron {
 
     public void calcOutput(){}
 
+    // This is used in single layer?
     public void updateWeights(){}
 
     public void updateWeights(double learningRate){}

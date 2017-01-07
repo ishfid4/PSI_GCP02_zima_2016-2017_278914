@@ -1,16 +1,16 @@
-package pl.ishfid.psi;
+package pl.ishfid.psi.Neuron;
 
 import static java.lang.StrictMath.abs;
 
 /**
  * Created by ishfi on 10.12.2016.
  */
-public class McCPforOja extends Neuron{
-    public McCPforOja(int inputCount) {
+public class McCPforHebb extends Neuron{
+    public McCPforHebb(int inputCount) {
         super(inputCount);
     }
 
-    public McCPforOja(int inputCount, boolean inInputLayer) {
+    public McCPforHebb(int inputCount, boolean inInputLayer) {
         super(inputCount, inInputLayer);
     }
 
@@ -25,8 +25,7 @@ public class McCPforOja extends Neuron{
     @Override
     public void updateWeights(double learningRate){
         for (NeuronInput input: this.getInputs()) {
-            double deltaNewWeight = learningRate *  input.getOutputVal()
-                    * (input.getInputVal() - input.getOutputVal() * input.getWeight());
+            double deltaNewWeight = learningRate * input.getInputVal() * input.getOutputVal();
             input.setWeight(input.getWeight() + deltaNewWeight);
         }
     }

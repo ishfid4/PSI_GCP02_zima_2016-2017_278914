@@ -1,5 +1,9 @@
 package pl.ishfid.psi;
 
+import pl.ishfid.psi.Neuron.Neuron;
+import pl.ishfid.psi.Neuron.NeuronFactory;
+import pl.ishfid.psi.Neuron.NeuronInput;
+
 import java.io.IOException;
 import java.util.ArrayList;
 
@@ -7,11 +11,11 @@ import java.util.ArrayList;
  * Created by ishfi on 11.12.2016.
  */
 public class SingleLayerNetwork {
-    public DataManager dataManager;
+    public static DataManager dataManager;
 
     private double learningRate;
     private Layer inputLayer;
-    private Layer outputLayer;
+    private static Layer outputLayer;
 
     public SingleLayerNetwork(int inputs, int outputs, double learningRate, NeuronFactory factory) throws IOException {
         this.learningRate = learningRate;
@@ -24,7 +28,7 @@ public class SingleLayerNetwork {
         this.outputLayer.fillLayer(outputs, this.inputLayer.getSize());
     }
 
-    public Layer getOutputLayer() {
+    static Layer getOutputLayer() {
         return outputLayer;
     }
 

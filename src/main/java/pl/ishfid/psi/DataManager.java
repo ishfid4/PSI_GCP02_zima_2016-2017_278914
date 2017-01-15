@@ -19,12 +19,12 @@ public class DataManager {
     public ArrayList<ArrayList<Double>> validationOutputDataSet;
 
     public DataManager() {
-        this.inputDataSet = new ArrayList<>(1300);
-        this.outputDataSet = new ArrayList<>(1300);
-        this.validationInputDataSet = new ArrayList<>(293);
-        this.validationOutputDataSet = new ArrayList<>(293);
-        this.learningRecordCount = 1300;//558
-        this.validationRecordCount = 293;//239
+        this.inputDataSet = new ArrayList<>(1200);
+        this.outputDataSet = new ArrayList<>(1200);
+        this.validationInputDataSet = new ArrayList<>(393);
+        this.validationOutputDataSet = new ArrayList<>(393);
+        this.learningRecordCount = 1200;//558
+        this.validationRecordCount = 393;//239
         this.inputCount = 256;
         this.outputCount = 10;
     }

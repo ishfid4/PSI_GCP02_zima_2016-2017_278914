@@ -162,12 +162,12 @@ public class Data {
     private double validationOutputDataSet[][];
 
     public Data() {
-        this.inputDataSet = new double[200][256];
-        this.inputVerificationSet = new double[200][10];
-        this.validationDataSet = new double[30][256];
-        this.validationOutputDataSet = new double[30][10];
-        this.learningRecordCount = 200;
-        this.validationRecordCount = 30;
+        this.inputDataSet = new double[400][256];
+        this.inputVerificationSet = new double[400][10];
+        this.validationDataSet = new double[230][256];
+        this.validationOutputDataSet = new double[230][10];
+        this.learningRecordCount = 400;
+        this.validationRecordCount = 230;
         this.inputCount = 256;
         this.outputCount = 10;
     }
